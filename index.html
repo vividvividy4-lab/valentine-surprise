@@ -9,7 +9,7 @@
 body{
   margin:0;
   height:100vh;
-  font-family:system-ui,-apple-system;
+  font-family:system-ui;
   background:radial-gradient(circle at top,#ff4d6d,#6a0572,#120014);
   color:white;
   overflow:hidden;
@@ -25,7 +25,7 @@ body{
   padding:20px;
 }
 
-.hidden{ display:none; }
+.hidden{display:none;}
 
 h1{
   font-size:clamp(2rem,6vw,3rem);
@@ -35,34 +35,14 @@ h1{
 
 button{
   padding:18px 42px;
-  font-size:1.4rem;
+  font-size:1.3rem;
   border-radius:999px;
   border:none;
   cursor:pointer;
   margin:12px;
-}
-
-.yes{
   background:linear-gradient(45deg,#ff4d6d,#ff8fab);
+  color:white;
   box-shadow:0 0 25px #ff8fab;
-  color:white;
-}
-
-.no{
-  background:#222;
-  color:white;
-}
-
-.heart{
-  position:absolute;
-  font-size:40px;
-  animation:float 1.5s forwards;
-  pointer-events:none;
-}
-
-@keyframes float{
-  from{transform:scale(0);opacity:1;}
-  to{transform:scale(2) translateY(-150px);opacity:0;}
 }
 
 /* slideshow */
@@ -73,167 +53,150 @@ button{
   box-shadow:0 0 30px #ff8fab;
 }
 
-.slide-box img{
-  width:100%;
-  display:block;
-}
+.slide-box img{width:100%;}
 
-.slide-text{
-  margin-top:18px;
-  font-size:1.1rem;
-}
-
-/* video */
 video{
   width:90%;
   max-width:360px;
   border-radius:20px;
   box-shadow:0 0 30px #ff8fab;
 }
+
+textarea{
+  width:90%;
+  max-width:360px;
+  height:120px;
+  border-radius:15px;
+  padding:15px;
+  border:none;
+  margin:20px 0;
+  font-size:1rem;
+}
 </style>
 </head>
 
 <body>
 
-<!-- QUESTION PAGE -->
 <div id="questions" class="page">
   <h1 id="question"></h1>
   <div id="buttons"></div>
 </div>
 
-<!-- SLIDES -->
 <div id="slides" class="page hidden">
   <div class="slide-box">
-    <img id="slideImg" src="">
+    <img id="slideImg">
   </div>
-  <div class="slide-text" id="slideText"></div>
-  <p style="opacity:.7;margin-top:10px;">(tap photo 💗)</p>
+  <p id="slideText"></p>
+  <p style="opacity:.7">(tap photo 💗)</p>
 </div>
 
-<!-- VIDEO -->
 <div id="videoPage" class="page hidden">
   <h1>One last thing… 🥺❤️</h1>
   <video controls>
-    <source src="https://drive.google.com/uc?export=download&id=1ErEpsdLVy8yqQizbYt-RE8adkYti7cxA" type="video/mp4">
+    <source src="https://drive.google.com/uc?export=download&id=1ErEpsdLVy8yqQizbYt-RE8adkYti7cxA">
   </video>
-  <button class="yes" onclick="nextAfterVideo()">Continue 💖</button>
+  <button onclick="goValentine()">Continue 💖</button>
 </div>
 
-<!-- FINAL -->
-<div id="final" class="page hidden">
+<div id="valentinePage" class="page hidden">
+  <textarea placeholder="Write something special from your heart here… 💌"></textarea>
   <h1>Will you be my Valentine? 💘</h1>
-  <button class="yes" onclick="finalYes()">YES ✨</button>
+  <button onclick="finalYes()">YES ✨</button>
+</div>
+
+<div id="finalPage" class="page hidden">
+  <h1>MUHAHAHA 🤭❤️</h1>
+  <h1>You are my Valentine forever 💖</h1>
 </div>
 
 <script>
-const songLink = "https://youtu.be/GDND88fqt1o";
-
-const questions = [
- {q:"HEY MY LOVE ❤️", o:[{t:"YES", n:1}]},
- {q:"Can I ask you something baby?", o:[
-   {t:"YES", n:2},
-   {t:"NO", n:1}
- ]},
- {q:"Sherikkum chodikkamooo 🥺", o:[
-   {t:"chodikkeyy", n:3},
-   {t:"shoo chodikeney penne", n:3}
- ]},
- {q:"Enne eshthamanooo chettaneyy 🥺", o:[
-   {t:"YES ❤️", n:4},
-   {t:"NO 🙄", n:3}
- ]},
- {q:"Wanna listen to a song? 🎵", o:[
-   {t:"YES 💖", song:true, n:5},
-   {t:"NO 😈", n:5}
- ]}
-];
-
 let qIndex = 0;
-
-const slideData = [
- { img:"https://drive.google.com/uc?export=view&id=1ExuQlACVhEdaIy5BMQUPy8QWiZlvgtRy",
-   text:"thanks for making this small girl always feel special ❤️" },
-
- { img:"https://drive.google.com/uc?export=view&id=11SebINuy58crPGeLwXhoZnoOvdfmYnI3",
-   text:"ee chakkareyum sudhari kuttiyum enikk kittiyathil njan grateful 💖" },
-
- { img:"https://drive.google.com/uc?export=view&id=1jZ_RRpxqwmcqWUT1Ru_IqnS6u0WNDavt",
-   text:"I love my mutta pupseyyy 🥺✨" },
-
- { img:"https://drive.google.com/uc?export=view&id=1kpEdFlMU1beNqTS91rgMhsazRP2PgCD0",
-   text:"This smile… my favourite forever 🥺✨" }
-];
-
 let slideIndex = 0;
 
-const qEl = document.getElementById("question");
-const btnEl = document.getElementById("buttons");
+const questions = [
+ {q:"HEY MY LOVE 🤍🤍", o:[{t:"YES", n:1}]},
+
+ {q:"Can I ask you something baby?",
+  o:[{t:"YES", n:2},{t:"NO 😏", n:1}]},
+
+ {q:"Sherikkum chodikkamooo 🥺",
+  o:[{t:"chodikkeyy", n:3},{t:"shoo chodikeney", n:3}]},
+
+ {q:"Enne eshtamanooo chettaneyy 🥺",
+  o:[{t:"YES ❤️", n:5},{t:"NO 🙄", n:4}]},
+
+ {q:"maryathakku eshtamanu parajoo 😤❤️",
+  o:[{t:"Okay okay YES 😌", n:5}]},
+
+ {q:"One more thing chakkate 😌",
+  o:[{t:"YES baby 💖", n:6}]},
+
+ {q:"Wanna listen to a song? 🎵",
+  o:[{t:"YES 🎶", n:7},{t:"NO 😜", n:6}]},
+
+ {q:"Now wanna see something? 🥺💞",
+  o:[{t:"YES ❤️", n:8},{t:"NO 😈", n:7}]}
+];
+
+const slides = [
+ {img:"https://drive.google.com/uc?export=view&id=1ExuQlACVhEdaIy5BMQUPy8QWiZlvgtRy",
+  text:"thanks for making this small girl always feel special ❤️"},
+ {img:"https://drive.google.com/uc?export=view&id=11SebINuy58crPGeLwXhoZnoOvdfmYnI3",
+  text:"ee chakkareyum sudhari kuttiyum enikk kittiyathil njan grateful 💖"},
+ {img:"https://drive.google.com/uc?export=view&id=1jZ_RRpxqwmcqWUT1Ru_IqnS6u0WNDavt",
+  text:"I love my mutta pupseyyy 🥺✨"},
+ {img:"https://drive.google.com/uc?export=view&id=1kpEdFlMU1beNqTS91rgMhsazRP2PgCD0",
+  text:"This smile… my favourite forever 🥺✨"}
+];
+
+const qEl=document.getElementById("question");
+const btnEl=document.getElementById("buttons");
 
 function loadQuestion(){
-  qEl.textContent = questions[qIndex].q;
-  btnEl.innerHTML = "";
-  questions[qIndex].o.forEach(opt=>{
-    const b = document.createElement("button");
-    b.textContent = opt.t;
-    b.className = opt.t.includes("NO") ? "no" : "yes";
-    b.onclick = ()=>{
-      vibrate();
-      hearts();
-      if(opt.song) window.open(songLink,"_blank");
-      qIndex = opt.n;
-      if(qIndex >= questions.length){
-        startSlides();
-      } else loadQuestion();
-    };
-    btnEl.appendChild(b);
-  });
+ qEl.textContent=questions[qIndex].q;
+ btnEl.innerHTML="";
+ questions[qIndex].o.forEach(opt=>{
+  const b=document.createElement("button");
+  b.textContent=opt.t;
+  b.onclick=()=>{
+    if(qIndex===7 && opt.t.startsWith("YES")) startSlides();
+    else{
+      qIndex=opt.n;
+      loadQuestion();
+    }
+  };
+  btnEl.appendChild(b);
+ });
 }
 
 function startSlides(){
-  document.getElementById("questions").classList.add("hidden");
-  document.getElementById("slides").classList.remove("hidden");
-  showSlide();
+ document.getElementById("questions").classList.add("hidden");
+ document.getElementById("slides").classList.remove("hidden");
+ showSlide();
 }
 
 function showSlide(){
-  document.getElementById("slideImg").src = slideData[slideIndex].img;
-  document.getElementById("slideText").textContent = slideData[slideIndex].text;
+ slideImg.src=slides[slideIndex].img;
+ slideText.textContent=slides[slideIndex].text;
 }
 
-document.getElementById("slides").onclick = ()=>{
-  vibrate();
-  slideIndex++;
-  if(slideIndex < slideData.length){
-    showSlide();
-  }else{
-    document.getElementById("slides").classList.add("hidden");
-    document.getElementById("videoPage").classList.remove("hidden");
-  }
+document.getElementById("slides").onclick=()=>{
+ slideIndex++;
+ if(slideIndex<slides.length) showSlide();
+ else{
+  slides.classList.add("hidden");
+  videoPage.classList.remove("hidden");
+ }
 };
 
-function nextAfterVideo(){
-  document.getElementById("videoPage").classList.add("hidden");
-  document.getElementById("final").classList.remove("hidden");
+function goValentine(){
+ videoPage.classList.add("hidden");
+ valentinePage.classList.remove("hidden");
 }
 
 function finalYes(){
-  alert("MUHAHAHA 🤭❤️ YOU ARE MY VALENTINE FOREVER");
-}
-
-function vibrate(){
-  if(navigator.vibrate) navigator.vibrate([100,50,200]);
-}
-
-function hearts(){
-  for(let i=0;i<15;i++){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.textContent="💖";
-    h.style.left=Math.random()*innerWidth+"px";
-    h.style.top=Math.random()*innerHeight+"px";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),1500);
-  }
+ valentinePage.classList.add("hidden");
+ finalPage.classList.remove("hidden");
 }
 
 loadQuestion();
