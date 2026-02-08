@@ -29,6 +29,10 @@ h1{
   margin-bottom:20px;
   text-shadow:0 0 20px #ffb3c6;
 }
+p{
+  font-size:1.1rem;
+  max-width:340px;
+}
 button{
   padding:18px 42px;
   font-size:1.3rem;
@@ -46,7 +50,10 @@ button{
   overflow:hidden;
   box-shadow:0 0 30px #ff8fab;
 }
-.slide-box img{width:100%;}
+.slide-box img{
+  width:100%;
+  display:block;
+}
 video{
   width:90%;
   max-width:360px;
@@ -63,12 +70,20 @@ video{
   <h1 id="question"></h1>
   <div id="buttons"></div>
 </div>
+
 <!-- TEASE PAGE -->
 <div id="teasePage" class="page hidden">
   <h1>maryathakku eshtamanu parajoo 😤❤️</h1>
   <button onclick="backFromTease()">Okay okay YES 😌</button>
 </div>
-<!-- SLIDES -->
+
+<!-- SEE SOMETHING PAGE -->
+<div id="seeSomething" class="page hidden">
+  <h1>Wanna see something baby? 🥺💞</h1>
+  <button onclick="startSlides()">YES ❤️</button>
+</div>
+
+<!-- IMAGE SLIDES -->
 <div id="slides" class="page hidden">
   <div class="slide-box">
     <img id="slideImg">
@@ -80,6 +95,7 @@ video{
 <!-- VIDEO PAGE -->
 <div id="videoPage" class="page hidden">
   <h1>One last thing… 🥺❤️</h1>
+  <p>You + me = my safe place 💞</p>
   <video controls playsinline>
     <source src="https://drive.google.com/uc?export=download&id=1ErEpsdLVy8yqQizbYt-RE8adkYti7cxA" type="video/mp4">
   </video>
@@ -108,40 +124,35 @@ const questions = [
  {q:"HEY MY LOVE 🤍🤍", o:[{t:"YES", n:1}]},
 
  {q:"Can I ask you something baby?",
-  o:[{t:"YES", n:2},{t:"NO 😏", n:1}]},
+  o:[
+    {t:"YES", n:2},
+    {t:"NO 😏", tease:true}
+  ]},
 
  {q:"Sherikkum chodikkamooo 🥺",
-  o:[{t:"chodikkeyy", n:3},{t:"shoo chodikeney", n:3}]},
+  o:[{t:"chodikkeyy", n:3}]},
 
-{
-  q:"Enne eshtamanooo chettaneyy 🥺",
+ {q:"Enne eshtamanooo chettaneyy 🥺",
   o:[
     {t:"YES ❤️", n:4},
     {t:"NO 🙄", tease:true}
-  ]
-},
+  ]},
 
  {q:"One more thing chakkate 😌",
-  o:[{t:"YES baby 💖", n:7}]},
+  o:[{t:"YES baby 💖", n:5}]},
 
  {q:"Wanna listen to a song? 🎵",
   o:[
-    {t:"YES 🎶", song:true, n:8},
-    {t:"NO 🙈", n:8}
-  ]},
-
- {q:"Now wanna see something? 🥺💞",
-  o:[
-    {t:"YES ❤️", n:"slides"},
-    {t:"NO 😈", n:7}
+    {t:"YES 🎶", song:true, n:"see"},
+    {t:"NO 🙈", tease:true}
   ]}
 ];
 
 const slides = [
  {img:"https://drive.google.com/uc?export=view&id=1ExuQlACVhEdaIy5BMQUPy8QWiZlvgtRy",
-  text:"thanks for making this small girl always feel special ❤️"},
+  text:"Thanks for making this small girl always feel special ❤️"},
  {img:"https://drive.google.com/uc?export=view&id=11SebINuy58crPGeLwXhoZnoOvdfmYnI3",
-  text:"ee chakkareyum sudhari kuttiyum enikk kittiyathil njan grateful 💖"},
+  text:"Ee chakkareyum sudhari kuttiyum enikk kittiyathil njan grateful 💖"},
  {img:"https://drive.google.com/uc?export=view&id=1jZ_RRpxqwmcqWUT1Ru_IqnS6u0WNDavt",
   text:"I love my mutta pupseyyy 🥺✨"},
  {img:"https://drive.google.com/uc?export=view&id=1kpEdFlMU1beNqTS91rgMhsazRP2PgCD0",
@@ -150,52 +161,46 @@ const slides = [
 
 const qEl = document.getElementById("question");
 const btnEl = document.getElementById("buttons");
-const questionsDiv = document.getElementById("questions");
-const slidesDiv = document.getElementById("slides");
-const videoPage = document.getElementById("videoPage");
-const valentinePage = document.getElementById("valentinePage");
-const finalPage = document.getElementById("finalPage");
 
 function loadQuestion(){
   qEl.textContent = questions[qIndex].q;
   btnEl.innerHTML = "";
+
   questions[qIndex].o.forEach(opt=>{
     const b = document.createElement("button");
     b.textContent = opt.t;
-   b.onclick = ()=>{
 
-  // 👉 NO → teasing page
-  if (opt.tease) {
-    document.getElementById("questions").classList.add("hidden");
-    document.getElementById("teasePage").classList.remove("hidden");
-    return;
-  }
+    b.onclick = ()=>{
+      if(opt.tease){
+        hideAll();
+        document.getElementById("teasePage").classList.remove("hidden");
+        return;
+      }
 
-  // 👉 Song (opens YouTube, continues)
-  if (opt.song) {
-    window.open(songLink, "_blank");
-    qIndex = opt.n;
-    loadQuestion();
-    return;
-  }
+      if(opt.song){
+        window.open(songLink,"_blank");
+        hideAll();
+        document.getElementById("seeSomething").classList.remove("hidden");
+        return;
+      }
 
-  // 👉 Slides
-  if (opt.n === "slides") {
-    startSlides();
-    return;
-  }
+      qIndex = opt.n;
+      loadQuestion();
+    };
 
-  // 👉 Normal YES flow
-  qIndex = opt.n;
-  loadQuestion();
-};
     btnEl.appendChild(b);
   });
 }
 
+function backFromTease(){
+  hideAll();
+  document.getElementById("questions").classList.remove("hidden");
+}
+
 function startSlides(){
-  questionsDiv.classList.add("hidden");
-  slidesDiv.classList.remove("hidden");
+  hideAll();
+  slideIndex = 0;
+  document.getElementById("slides").classList.remove("hidden");
   showSlide();
 }
 
@@ -204,33 +209,32 @@ function showSlide(){
   slideText.textContent = slides[slideIndex].text;
 }
 
-slidesDiv.onclick = ()=>{
+document.getElementById("slides").onclick = ()=>{
   slideIndex++;
   if(slideIndex < slides.length){
     showSlide();
   }else{
-    slidesDiv.classList.add("hidden");
-    videoPage.classList.remove("hidden");
+    hideAll();
+    document.getElementById("videoPage").classList.remove("hidden");
   }
 };
 
 function goToValentine(){
-  videoPage.classList.add("hidden");
-  valentinePage.classList.remove("hidden");
+  hideAll();
+  document.getElementById("valentinePage").classList.remove("hidden");
 }
 
 function goToFinal(){
-  valentinePage.classList.add("hidden");
-  finalPage.classList.remove("hidden");
+  hideAll();
+  document.getElementById("finalPage").classList.remove("hidden");
 }
-function backFromTease(){
-  document.getElementById("teasePage").classList.add("hidden");
-  document.getElementById("questions").classList.remove("hidden");
-  qIndex = 4; // YES path
-  loadQuestion();
-                          }
+
+function hideAll(){
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+}
+
 loadQuestion();
 </script>
 
 </body>
-</html>
+</html>  
