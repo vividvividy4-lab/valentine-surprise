@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💖</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  font-family:system-ui,-apple-system;
+  background:radial-gradient(circle at top,#ff4d6d,#6a0572,#120014);
+  color:white;
+  overflow:hidden;
+}
+
+.page{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
+
+.hidden{ display:none; }
+
+h1{
+  font-size:clamp(2rem,6vw,3rem);
+  margin-bottom:20px;
+  text-shadow:0 0 20px #ffb3c6;
+}
+
+button{
+  padding:18px 42px;
+  font-size:1.4rem;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  margin:12px;
+}
+
+.yes{
+  background:linear-gradient(45deg,#ff4d6d,#ff8fab);
+  box-shadow:0 0 25px #ff8fab;
+  color:white;
+}
+
+.no{
+  background:#222;
+  color:white;
+}
+
+.heart{
+  position:absolute;
+  font-size:40px;
+  animation:float 1.5s forwards;
+  pointer-events:none;
+}
+
+@keyframes float{
+  from{transform:scale(0);opacity:1;}
+  to{transform:scale(2) translateY(-150px);opacity:0;}
+}
+
+/* slideshow */
+.slide-box{
+  max-width:320px;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 0 30px #ff8fab;
+}
+
+.slide-box img{
+  width:100%;
+  display:block;
+}
+
+.slide-text{
+  margin-top:18px;
+  font-size:1.1rem;
+}
+
+/* video */
+video{
+  width:90%;
+  max-width:360px;
+  border-radius:20px;
+  box-shadow:0 0 30px #ff8fab;
+}
+</style>
+</head>
+
+<body>
+
+<!-- QUESTION PAGE -->
+<div id="questions" class="page">
+  <h1 id="question"></h1>
+  <div id="buttons"></div>
+</div>
+
+<!-- SLIDES -->
+<div id="slides" class="page hidden">
+  <div class="slide-box">
+    <img id="slideImg" src="">
+  </div>
+  <div class="slide-text" id="slideText"></div>
+  <p style="opacity:.7;margin-top:10px;">(tap photo 💗)</p>
+</div>
+
+<!-- VIDEO -->
+<div id="videoPage" class="page hidden">
+  <h1>One last thing… 🥺❤️</h1>
+  <video controls>
+    <source src="https://drive.google.com/uc?export=download&id=1ErEpsdLVy8yqQizbYt-RE8adkYti7cxA" type="video/mp4">
+  </video>
+  <button class="yes" onclick="nextAfterVideo()">Continue 💖</button>
+</div>
+
+<!-- FINAL -->
+<div id="final" class="page hidden">
+  <h1>Will you be my Valentine? 💘</h1>
+  <button class="yes" onclick="finalYes()">YES ✨</button>
+</div>
+
+<script>
+const songLink = "https://youtu.be/GDND88fqt1o";
+
+const questions = [
+ {q:"HEY MY LOVE ❤️", o:[{t:"YES", n:1}]},
+ {q:"Can I ask you something baby?", o:[
+   {t:"YES", n:2},
+   {t:"NO", n:1}
+ ]},
+ {q:"Sherikkum chodikkamooo 🥺", o:[
+   {t:"chodikkeyy", n:3},
+   {t:"shoo chodikeney penne", n:3}
+ ]},
+ {q:"Enne eshthamanooo chettaneyy 🥺", o:[
+   {t:"YES ❤️", n:4},
+   {t:"NO 🙄", n:3}
+ ]},
+ {q:"Wanna listen to a song? 🎵", o:[
+   {t:"YES 💖", song:true, n:5},
+   {t:"NO 😈", n:5}
+ ]}
+];
+
+let qIndex = 0;
+
+const slideData = [
+ { img:"https://drive.google.com/uc?export=view&id=1ExuQlACVhEdaIy5BMQUPy8QWiZlvgtRy",
+   text:"thanks for making this small girl always feel special ❤️" },
+
+ { img:"https://drive.google.com/uc?export=view&id=11SebINuy58crPGeLwXhoZnoOvdfmYnI3",
+   text:"ee chakkareyum sudhari kuttiyum enikk kittiyathil njan grateful 💖" },
+
+ { img:"https://drive.google.com/uc?export=view&id=1jZ_RRpxqwmcqWUT1Ru_IqnS6u0WNDavt",
+   text:"I love my mutta pupseyyy 🥺✨" },
+
+ { img:"https://drive.google.com/uc?export=view&id=1kpEdFlMU1beNqTS91rgMhsazRP2PgCD0",
+   text:"This smile… my favourite forever 🥺✨" }
+];
+
+let slideIndex = 0;
+
+const qEl = document.getElementById("question");
+const btnEl = document.getElementById("buttons");
+
+function loadQuestion(){
+  qEl.textContent = questions[qIndex].q;
+  btnEl.innerHTML = "";
+  questions[qIndex].o.forEach(opt=>{
+    const b = document.createElement("button");
+    b.textContent = opt.t;
+    b.className = opt.t.includes("NO") ? "no" : "yes";
+    b.onclick = ()=>{
+      vibrate();
+      hearts();
+      if(opt.song) window.open(songLink,"_blank");
+      qIndex = opt.n;
+      if(qIndex >= questions.length){
+        startSlides();
+      } else loadQuestion();
+    };
+    btnEl.appendChild(b);
+  });
+}
+
+function startSlides(){
+  document.getElementById("questions").classList.add("hidden");
+  document.getElementById("slides").classList.remove("hidden");
+  showSlide();
+}
+
+function showSlide(){
+  document.getElementById("slideImg").src = slideData[slideIndex].img;
+  document.getElementById("slideText").textContent = slideData[slideIndex].text;
+}
+
+document.getElementById("slides").onclick = ()=>{
+  vibrate();
+  slideIndex++;
+  if(slideIndex < slideData.length){
+    showSlide();
+  }else{
+    document.getElementById("slides").classList.add("hidden");
+    document.getElementById("videoPage").classList.remove("hidden");
+  }
+};
+
+function nextAfterVideo(){
+  document.getElementById("videoPage").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+}
+
+function finalYes(){
+  alert("MUHAHAHA 🤭❤️ YOU ARE MY VALENTINE FOREVER");
+}
+
+function vibrate(){
+  if(navigator.vibrate) navigator.vibrate([100,50,200]);
+}
+
+function hearts(){
+  for(let i=0;i<15;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent="💖";
+    h.style.left=Math.random()*innerWidth+"px";
+    h.style.top=Math.random()*innerHeight+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),1500);
+  }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
