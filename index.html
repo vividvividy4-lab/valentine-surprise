@@ -14,7 +14,6 @@ body{
   color:white;
   overflow:hidden;
 }
-
 .page{
   height:100vh;
   display:flex;
@@ -24,15 +23,12 @@ body{
   text-align:center;
   padding:20px;
 }
-
 .hidden{display:none;}
-
 h1{
   font-size:clamp(2rem,6vw,3rem);
   margin-bottom:20px;
   text-shadow:0 0 20px #ffb3c6;
 }
-
 button{
   padding:18px 42px;
   font-size:1.3rem;
@@ -44,44 +40,31 @@ button{
   color:white;
   box-shadow:0 0 25px #ff8fab;
 }
-
-/* slideshow */
 .slide-box{
   max-width:320px;
   border-radius:20px;
   overflow:hidden;
   box-shadow:0 0 30px #ff8fab;
 }
-
 .slide-box img{width:100%;}
-
 video{
   width:90%;
   max-width:360px;
   border-radius:20px;
   box-shadow:0 0 30px #ff8fab;
 }
-
-textarea{
-  width:90%;
-  max-width:360px;
-  height:120px;
-  border-radius:15px;
-  padding:15px;
-  border:none;
-  margin:20px 0;
-  font-size:1rem;
-}
 </style>
 </head>
 
 <body>
 
+<!-- QUESTIONS -->
 <div id="questions" class="page">
   <h1 id="question"></h1>
   <div id="buttons"></div>
 </div>
 
+<!-- SLIDES -->
 <div id="slides" class="page hidden">
   <div class="slide-box">
     <img id="slideImg">
@@ -90,26 +73,30 @@ textarea{
   <p style="opacity:.7">(tap photo 💗)</p>
 </div>
 
+<!-- VIDEO PAGE -->
 <div id="videoPage" class="page hidden">
   <h1>One last thing… 🥺❤️</h1>
-  <video controls>
-    <source src="https://drive.google.com/uc?export=download&id=1ErEpsdLVy8yqQizbYt-RE8adkYti7cxA">
+  <video controls playsinline>
+    <source src="https://drive.google.com/uc?export=download&id=1ErEpsdLVy8yqQizbYt-RE8adkYti7cxA" type="video/mp4">
   </video>
-  <button onclick="goValentine()">Continue 💖</button>
+  <button onclick="goToValentine()">Continue 💖</button>
 </div>
 
+<!-- VALENTINE QUESTION -->
 <div id="valentinePage" class="page hidden">
-  <textarea placeholder="Write something special from your heart here… 💌"></textarea>
   <h1>Will you be my Valentine? 💘</h1>
-  <button onclick="finalYes()">YES ✨</button>
+  <button onclick="goToFinal()">YES ✨</button>
 </div>
 
+<!-- FINAL PAGE -->
 <div id="finalPage" class="page hidden">
   <h1>MUHAHAHA 🤭❤️</h1>
   <h1>You are my Valentine forever 💖</h1>
 </div>
 
 <script>
+const songLink = "https://youtu.be/GDND88fqt1o";
+
 let qIndex = 0;
 let slideIndex = 0;
 
@@ -123,19 +110,25 @@ const questions = [
   o:[{t:"chodikkeyy", n:3},{t:"shoo chodikeney", n:3}]},
 
  {q:"Enne eshtamanooo chettaneyy 🥺",
-  o:[{t:"YES ❤️", n:5},{t:"NO 🙄", n:4}]},
+  o:[{t:"YES ❤️", n:4},{t:"NO 🙄", n:5}]},
 
  {q:"maryathakku eshtamanu parajoo 😤❤️",
-  o:[{t:"Okay okay YES 😌", n:5}]},
+  o:[{t:"Okay okay YES 😌", n:6}]},
 
  {q:"One more thing chakkate 😌",
-  o:[{t:"YES baby 💖", n:6}]},
+  o:[{t:"YES baby 💖", n:7}]},
 
  {q:"Wanna listen to a song? 🎵",
-  o:[{t:"YES 🎶", n:7},{t:"NO 😜", n:6}]},
+  o:[
+    {t:"YES 🎶", song:true, n:8},
+    {t:"NO 🙈", n:8}
+  ]},
 
  {q:"Now wanna see something? 🥺💞",
-  o:[{t:"YES ❤️", n:8},{t:"NO 😈", n:7}]}
+  o:[
+    {t:"YES ❤️", n:"slides"},
+    {t:"NO 😈", n:7}
+  ]}
 ];
 
 const slides = [
@@ -149,54 +142,62 @@ const slides = [
   text:"This smile… my favourite forever 🥺✨"}
 ];
 
-const qEl=document.getElementById("question");
-const btnEl=document.getElementById("buttons");
+const qEl = document.getElementById("question");
+const btnEl = document.getElementById("buttons");
+const questionsDiv = document.getElementById("questions");
+const slidesDiv = document.getElementById("slides");
+const videoPage = document.getElementById("videoPage");
+const valentinePage = document.getElementById("valentinePage");
+const finalPage = document.getElementById("finalPage");
 
 function loadQuestion(){
- qEl.textContent=questions[qIndex].q;
- btnEl.innerHTML="";
- questions[qIndex].o.forEach(opt=>{
-  const b=document.createElement("button");
-  b.textContent=opt.t;
-  b.onclick=()=>{
-    if(qIndex===7 && opt.t.startsWith("YES")) startSlides();
-    else{
-      qIndex=opt.n;
+  qEl.textContent = questions[qIndex].q;
+  btnEl.innerHTML = "";
+  questions[qIndex].o.forEach(opt=>{
+    const b = document.createElement("button");
+    b.textContent = opt.t;
+    b.onclick = ()=>{
+      if(opt.song) window.open(songLink,"_blank");
+      if(opt.n === "slides"){
+        startSlides();
+        return;
+      }
+      qIndex = opt.n;
       loadQuestion();
-    }
-  };
-  btnEl.appendChild(b);
- });
+    };
+    btnEl.appendChild(b);
+  });
 }
 
 function startSlides(){
- document.getElementById("questions").classList.add("hidden");
- document.getElementById("slides").classList.remove("hidden");
- showSlide();
+  questionsDiv.classList.add("hidden");
+  slidesDiv.classList.remove("hidden");
+  showSlide();
 }
 
 function showSlide(){
- slideImg.src=slides[slideIndex].img;
- slideText.textContent=slides[slideIndex].text;
+  slideImg.src = slides[slideIndex].img;
+  slideText.textContent = slides[slideIndex].text;
 }
 
-document.getElementById("slides").onclick=()=>{
- slideIndex++;
- if(slideIndex<slides.length) showSlide();
- else{
-  slides.classList.add("hidden");
-  videoPage.classList.remove("hidden");
- }
+slidesDiv.onclick = ()=>{
+  slideIndex++;
+  if(slideIndex < slides.length){
+    showSlide();
+  }else{
+    slidesDiv.classList.add("hidden");
+    videoPage.classList.remove("hidden");
+  }
 };
 
-function goValentine(){
- videoPage.classList.add("hidden");
- valentinePage.classList.remove("hidden");
+function goToValentine(){
+  videoPage.classList.add("hidden");
+  valentinePage.classList.remove("hidden");
 }
 
-function finalYes(){
- valentinePage.classList.add("hidden");
- finalPage.classList.remove("hidden");
+function goToFinal(){
+  valentinePage.classList.add("hidden");
+  finalPage.classList.remove("hidden");
 }
 
 loadQuestion();
