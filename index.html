@@ -63,7 +63,11 @@ video{
   <h1 id="question"></h1>
   <div id="buttons"></div>
 </div>
-
+<!-- TEASE PAGE -->
+<div id="teasePage" class="page hidden">
+  <h1>maryathakku eshtamanu parajoo 😤❤️</h1>
+  <button onclick="backFromTease()">Okay okay YES 😌</button>
+</div>
 <!-- SLIDES -->
 <div id="slides" class="page hidden">
   <div class="slide-box">
@@ -117,9 +121,6 @@ const questions = [
   ]
 },
 
- {q:"maryathakku eshtamanu parajoo 😤❤️",
-  o:[{t:"Okay okay YES 😌", n:6}]},
-
  {q:"One more thing chakkate 😌",
   o:[{t:"YES baby 💖", n:7}]},
 
@@ -161,15 +162,33 @@ function loadQuestion(){
   questions[qIndex].o.forEach(opt=>{
     const b = document.createElement("button");
     b.textContent = opt.t;
-    b.onclick = ()=>{
-      if(opt.song) window.open(songLink,"https://music.youtube.com/watch?v=GDND88fqt1o&si=yIphIJnkOvqa89UD");
-      if(opt.n === "slides"){
-        startSlides();
-        return;
-      }
-      qIndex = opt.n;
-      loadQuestion();
-    };
+   b.onclick = ()=>{
+
+  // 👉 NO → teasing page
+  if (opt.tease) {
+    document.getElementById("questions").classList.add("hidden");
+    document.getElementById("teasePage").classList.remove("hidden");
+    return;
+  }
+
+  // 👉 Song (opens YouTube, continues)
+  if (opt.song) {
+    window.open(songLink, "_blank");
+    qIndex = opt.n;
+    loadQuestion();
+    return;
+  }
+
+  // 👉 Slides
+  if (opt.n === "slides") {
+    startSlides();
+    return;
+  }
+
+  // 👉 Normal YES flow
+  qIndex = opt.n;
+  loadQuestion();
+};
     btnEl.appendChild(b);
   });
 }
@@ -204,7 +223,12 @@ function goToFinal(){
   valentinePage.classList.add("hidden");
   finalPage.classList.remove("hidden");
 }
-
+function backFromTease(){
+  document.getElementById("teasePage").classList.add("hidden");
+  document.getElementById("questions").classList.remove("hidden");
+  qIndex = 4; // YES path
+  loadQuestion();
+                          }
 loadQuestion();
 </script>
 
