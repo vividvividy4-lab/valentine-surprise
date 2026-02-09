@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -242,11 +242,10 @@ function loadQuestion(){
     const b = document.createElement("button");
     b.textContent = opt.t;
 
- b.onclick = ()=>{
-  if(opt.t.includes("YES") || opt.song){
-    clickEffectFromButton(b);
-  }
-      
+    b.onclick = ()=>{
+      if(opt.t.includes("YES") || opt.song){
+        clickEffectFromButton(b);
+      }
 
       if(opt.tease){
         hideAll();
@@ -319,15 +318,24 @@ function createHeart(){
 }
 setInterval(createHeart,200);
 
-function clickEffect(x,y){
-  if(navigator.vibrate) navigator.vibrate(40);
-  for(let i=0;i<8;i++){
-    const h=document.createElement("div");
+/* ❤️ BUTTON HEARTS + VIBRATION */
+function clickEffectFromButton(btn){
+  if(navigator.vibrate){
+    navigator.vibrate(60);
+  }
+
+  const rect = btn.getBoundingClientRect();
+  const x = rect.left + rect.width/2;
+  const y = rect.top + rect.height/2;
+
+  for(let i=0;i<12;i++){
+    const h = document.createElement("div");
     h.className="heart";
     h.innerHTML="❤️";
-    h.style.left=x+"px";
-    h.style.top=y+"px";
+    h.style.left = x+"px";
+    h.style.top = y+"px";
     h.style.position="fixed";
+    h.style.fontSize = (18+Math.random()*16)+"px";
     h.style.animationDuration="2s";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),2000);
@@ -339,4 +347,4 @@ loadQuestion();
 </script>
 
 </body>
-</html>  
+</html>        
