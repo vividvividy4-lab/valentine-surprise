@@ -34,8 +34,10 @@
     transform: translateY(-110vh) scale(1.5);
     opacity: 0;
   }
+}
 
-  body{
+/* 🔴 THIS WAS BROKEN BEFORE – NOW FIXED */
+body{
   margin:0;
   height:100vh;
   font-family:system-ui;
@@ -43,7 +45,12 @@
   color:white;
   overflow:hidden;
 }
+
 .page{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height:100vh;
   display:flex;
   flex-direction:column;
@@ -51,17 +58,22 @@
   align-items:center;
   text-align:center;
   padding:20px;
+  z-index: 2;
 }
+
 .hidden{display:none;}
+
 h1{
   font-size:clamp(2rem,6vw,3rem);
   margin-bottom:20px;
   text-shadow:0 0 20px #ffb3c6;
 }
+
 p{
   font-size:1.1rem;
   max-width:340px;
 }
+
 button{
   padding:18px 42px;
   font-size:1.3rem;
@@ -73,16 +85,19 @@ button{
   color:white;
   box-shadow:0 0 25px #ff8fab;
 }
+
 .slide-box{
   max-width:320px;
   border-radius:20px;
   overflow:hidden;
   box-shadow:0 0 30px #ff8fab;
 }
+
 .slide-box img{
   width:100%;
   display:block;
 }
+
 video{
   width:90%;
   max-width:360px;
@@ -143,6 +158,8 @@ video{
   <h1>You are my Valentine forever 💖</h1>
 </div>
 
+<div id="heart-container"></div>
+
 <script>
 const songLink = "https://youtu.be/GDND88fqt1o";
 
@@ -172,24 +189,34 @@ const questions = [
 
  {q:"Wanna listen to a song? 🎵",
   o:[
-    {t:"YES 🎶", song:true, n:"see"},
+    {t:"YES 🎶", song:true},
     {t:"NO 🙈", tease:true}
   ]}
 ];
 
 const slides = [
- {img:"images/IMG_20260209_012924_423.jpg"},
-  text:"Thanks for making this small girl always feel special ❤️"},
- {img:" images/IMG_20260209_012707_800.jpg ",
-  text:"Ee chakkareyum sudhari kuttiyum enikk kittiyathil njan bhayankara grateful 💖"},
- {img:"images/IMG_20260209_012952_838.jpg",
-  text:"Ente chekken bhayakara vazhakayiiyaa chilapole enikeyy nalla thallu kodukkane thonaruneyy but still I love my mutta pupseyyy nee ente jeevanney 🤭❤❤✨"},
- {img:"images/IMG_20260209_015150.jpg",
-  text:"ente jeevanna ponney nee miss you soo much edoo ente jeevanna vavaey nee "}
+ {
+   img:"images/IMG_20260209_012924_423.jpg",
+   text:"Thanks for making this small girl always feel special ❤️"
+ },
+ {
+   img:"images/IMG_20260209_012707_800.jpg",
+   text:"Ee chakkareyum sudhari kuttiyum enikk kittiyathil njan bhayankara grateful 💖"
+ },
+ {
+   img:"images/IMG_20260209_012952_838.jpg",
+   text:"Ente chekken bhayakara vazhakayiiyaa… still I love you 🤭❤️"
+ },
+ {
+   img:"images/IMG_20260209_015150.jpg",
+   text:"ente jeevanna ponney nee miss you soo much edoo 💞"
+ }
 ];
 
 const qEl = document.getElementById("question");
 const btnEl = document.getElementById("buttons");
+const slideImg = document.getElementById("slideImg");
+const slideText = document.getElementById("slideText");
 
 function loadQuestion(){
   qEl.textContent = questions[qIndex].q;
@@ -200,7 +227,8 @@ function loadQuestion(){
     b.textContent = opt.t;
 
     b.onclick = (e)=>{
-  clickEffect(e.clientX, e.clientY);
+      clickEffect(e.clientX, e.clientY);
+
       if(opt.tease){
         hideAll();
         document.getElementById("teasePage").classList.remove("hidden");
@@ -262,42 +290,38 @@ function goToFinal(){
 function hideAll(){
   document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
 }
+
+/* ❤️ HEARTS + VIBRATION */
 function createHeart(){
   const heart = document.createElement("div");
   heart.className = "heart";
   heart.innerHTML = "❤️";
-
   heart.style.left = Math.random() * 100 + "vw";
   heart.style.fontSize = (16 + Math.random() * 20) + "px";
   heart.style.animationDuration = (4 + Math.random() * 4) + "s";
-
   document.getElementById("heart-container").appendChild(heart);
+  setTimeout(()=>heart.remove(),8000);
+}
+setInterval(createHeart,300);
 
-  setTimeout(()=> heart.remove(), 8000);
+function clickEffect(x,y){
+  if(navigator.vibrate) navigator.vibrate(40);
+  for(let i=0;i<8;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=x+"px";
+    h.style.top=y+"px";
+    h.style.position="fixed";
+    h.style.animationDuration="2s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),2000);
+  }
 }
 
-setInterval(createHeart, 300);
-
-function clickEffect(x, y){
-  if(navigator.vibrate){
-    navigator.vibrate(40);
-  }
-
-  for(let i=0;i<8;i++){
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerHTML = "❤️";
-    heart.style.left = x + "px";
-    heart.style.top = y + "px";
-    heart.style.position = "fixed";
-    heart.style.animationDuration = "2s";
-    document.body.appendChild(heart);
-
-    setTimeout(()=> heart.remove(), 2000);
-  }
-   
+/* 🚀 START */
 loadQuestion();
 </script>
-<div id="heart-container"></div>
+
 </body>
-</html>  
+</html>   
