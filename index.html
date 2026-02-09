@@ -242,10 +242,11 @@ function loadQuestion(){
     const b = document.createElement("button");
     b.textContent = opt.t;
 
-    b.onclick = (e)=>{
-      if(opt.t.includes("YES") || opt.song){
-        clickEffect(e.clientX, e.clientY);
-      }
+ b.onclick = ()=>{
+  if(opt.t.includes("YES") || opt.song){
+    clickEffectFromButton(b);
+  }
+      
 
       if(opt.tease){
         hideAll();
@@ -316,7 +317,7 @@ function createHeart(){
   document.getElementById("heart-container").appendChild(h);
   setTimeout(()=>h.remove(),8000);
 }
-setInterval(createHeart,300);
+setInterval(createHeart,200);
 
 function clickEffect(x,y){
   if(navigator.vibrate) navigator.vibrate(40);
