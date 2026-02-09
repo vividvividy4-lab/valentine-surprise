@@ -8,10 +8,7 @@
 <style>
 #heart-container{
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
   overflow: hidden;
   z-index: 1;
@@ -20,23 +17,16 @@
 .heart{
   position: absolute;
   bottom: -20px;
-  color: rgba(255, 105, 180, 0.7);
+  color: rgba(255,105,180,.7);
   font-size: 20px;
   animation: floatUp linear infinite;
 }
 
 @keyframes floatUp{
-  0%{
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100%{
-    transform: translateY(-110vh) scale(1.5);
-    opacity: 0;
-  }
+  from{transform:translateY(0);opacity:1}
+  to{transform:translateY(-110vh);opacity:0}
 }
 
-/* 🔴 THIS WAS BROKEN BEFORE – NOW FIXED */
 body{
   margin:0;
   height:100vh;
@@ -47,32 +37,18 @@ body{
 }
 
 .page{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height:100vh;
+  position:fixed;
+  inset:0;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
   padding:20px;
-  z-index: 2;
+  z-index:2;
 }
 
 .hidden{display:none;}
-
-h1{
-  font-size:clamp(2rem,6vw,3rem);
-  margin-bottom:20px;
-  text-shadow:0 0 20px #ffb3c6;
-}
-
-p{
-  font-size:1.1rem;
-  max-width:340px;
-}
 
 button{
   padding:18px 42px;
@@ -93,9 +69,11 @@ button{
   box-shadow:0 0 30px #ff8fab;
 }
 
-.slide-box img{
-  width:100%;
-  display:block;
+.slide-box img{width:100%;display:block}
+
+#slides p{
+  text-align:center;
+  margin:auto;
 }
 
 video{
@@ -109,222 +87,119 @@ video{
 
 <body>
 
-<!-- QUESTIONS -->
 <div id="questions" class="page">
   <h1 id="question"></h1>
   <div id="buttons"></div>
 </div>
 
-<!-- TEASE PAGE -->
 <div id="teasePage" class="page hidden">
   <h1>maryathakku eshtamanu parajoo 😤❤️</h1>
   <button onclick="backFromTease()">Okay okay YES 😌</button>
 </div>
 
-<!-- SEE SOMETHING PAGE -->
 <div id="seeSomething" class="page hidden">
   <h1>Wanna see something baby? 🥺💞</h1>
   <button onclick="startSlides()">YES ❤️</button>
 </div>
 
-<!-- IMAGE SLIDES -->
 <div id="slides" class="page hidden">
-  <div class="slide-box">
-    <img id="slideImg">
-  </div>
+  <div class="slide-box"><img id="slideImg"></div>
   <p id="slideText"></p>
   <p style="opacity:.7">(tap photo 💗)</p>
 </div>
 
-<!-- VIDEO PAGE -->
 <div id="videoPage" class="page hidden">
   <h1>One last thing… 🥺❤️</h1>
   <p>i misss you edooo 💞</p>
   <video controls playsinline>
-    <source src="https://drive.google.com/uc?export=download&id=1ErEpsdLVy8yqQizbYt-RE8adkYti7cxA" type="video/mp4">
+    <source src="https://drive.google.com/uc?export=download&id=1ErEpsdLVy8yqQizbYt-RE8adkYti7cxA">
   </video>
   <button onclick="goToValentine()">Continue 💖</button>
 </div>
 
-<!-- VALENTINE QUESTION -->
 <div id="valentinePage" class="page hidden">
-  <h1>Will you be my Valentine my mongoli ❤? 💘</h1>
+  <h1>Will you be my Valentine my mongoli ❤?</h1>
   <button onclick="goToFinal()">YES ✨</button>
 </div>
 
-<!-- FINAL PAGE -->
 <div id="finalPage" class="page hidden">
-  <h1>MUHAHAHA 🤭❤️</h1>
   <h1>You are my Valentine forever 💖</h1>
 </div>
 
 <div id="heart-container"></div>
 
 <script>
-const songLink = "https://youtu.be/GDND88fqt1o";
+const songLink="https://youtu.be/GDND88fqt1o";
+let qIndex=0,slideIndex=0;
 
-let qIndex = 0;
-let slideIndex = 0;
-
-const questions = [
- {q:"HEY MY LOVE 🤍🤍", o:[{t:"YES", n:1}]},
-
- {q:"Can I ask you something baby?",
-  o:[
-    {t:"YES", n:2},
-    {t:"NO 😏", tease:true}
-  ]},
-
- {q:"Sherikkum chodikkamooo 🥺",
-  o:[{t:"chodikkeyy", n:3}]},
-
- {q:"Enne eshtamanooo chettaneyy 🥺",
-  o:[
-    {t:"YES ❤️", n:4},
-    {t:"NO 🙄", tease:true}
-  ]},
-
- {q:"One more thing chakkare 😌",
-  o:[{t:"YES baby 💖", n:5}]},
-
- {q:"Wanna listen to a song my baby ? 🎵",
-  o:[
-    {t:"YES 🎶", song:true},
-    {t:"NO 🙈", tease:true}
-  ]}
+const questions=[
+ {q:"HEY MY LOVE 🤍🤍",o:[{t:"YES",n:1}]},
+ {q:"Can I ask you something baby?",o:[{t:"YES",n:2},{t:"NO 😏",tease:true}]},
+ {q:"Sherikkum chodikkamooo 🥺",o:[{t:"chodikkeyy",n:3}]},
+ {q:"Enne eshtamanooo chettaneyy 🥺",o:[{t:"YES ❤️",n:4},{t:"NO 🙄",tease:true}]},
+ {q:"One more thing chakkare 😌",o:[{t:"YES baby 💖",n:5}]},
+ {q:"Wanna listen to a song my baby ?",o:[{t:"YES 🎶",song:true},{t:"NO 🙈",tease:true}]}
 ];
 
-const slides = [
- {
-   img:"images/IMG_20260209_012924_423.jpg",
-   text:"Thanks for making this small girl always feel special ❤️"
- },
- {
-   img:"images/IMG_20260209_012707_800.jpg",
-   text:"Ee chakkareyum sudhari kuttiyum enikk "
-     "kittiyathil njan bhayankara grateful 💖"
- },
- {
-   img:"images/IMG_20260209_012952_838.jpg",
-   text:"Ente chekken bhayakara vazhakayiiyaa… 
-     "still I love you 🤭❤️"
- },
- {
-   img:"images/IMG_20260209_015150.jpg",
-   text:"ente jeevanna ponney nee miss you soo much edoo 💞"
-   "I miss you soooo much chakkare "
- }
+const slides=[
+ {img:"images/IMG_20260209_012924_423.jpg",text:"Thanks for making this small girl always feel special ❤️"},
+ {img:"images/IMG_20260209_012707_800.jpg",text:"Ee chakkareyum sudhari kuttiyum enikk kittiyathil njan bhayankara grateful 💖"},
+ {img:"images/IMG_20260209_012952_838.jpg",text:"Still I love you 🤭❤️"},
+ {img:"images/IMG_20260209_015150.jpg",text:"I miss you soooo much chakkare 💞"}
 ];
 
-const qEl = document.getElementById("question");
-const btnEl = document.getElementById("buttons");
-const slideImg = document.getElementById("slideImg");
-const slideText = document.getElementById("slideText");
+const qEl=document.getElementById("question");
+const btnEl=document.getElementById("buttons");
+const slideImg=document.getElementById("slideImg");
+const slideText=document.getElementById("slideText");
 
 function loadQuestion(){
-  qEl.textContent = questions[qIndex].q;
-  btnEl.innerHTML = "";
-
-  questions[qIndex].o.forEach(opt=>{
-    const b = document.createElement("button");
-    b.textContent = opt.t;
-
-    b.onclick = (e)=>{
-      clickEffect(e.clientX, e.clientY);
-
-      if(opt.tease){
-        hideAll();
-        document.getElementById("teasePage").classList.remove("hidden");
-        return;
-      }
-
-      if(opt.song){
-        window.open(songLink,"_blank");
-        hideAll();
-        document.getElementById("seeSomething").classList.remove("hidden");
-        return;
-      }
-
-      qIndex = opt.n;
-      loadQuestion();
-    };
-
-    btnEl.appendChild(b);
-  });
+ qEl.textContent=questions[qIndex].q;
+ btnEl.innerHTML="";
+ questions[qIndex].o.forEach(opt=>{
+  const b=document.createElement("button");
+  b.textContent=opt.t;
+  b.onclick=e=>{
+   if(opt.t.includes("YES")||opt.song) clickEffect(e.clientX,e.clientY);
+   if(opt.tease){hideAll();teasePage.classList.remove("hidden");return;}
+   if(opt.song){window.open(songLink,"_blank");hideAll();seeSomething.classList.remove("hidden");return;}
+   qIndex=opt.n;loadQuestion();
+  };
+  btnEl.appendChild(b);
+ });
 }
 
-function backFromTease(){
-  hideAll();
-  document.getElementById("questions").classList.remove("hidden");
-}
+function startSlides(){hideAll();slideIndex=0;slidesDiv.classList.remove("hidden");showSlide();}
+function showSlide(){slideImg.src=slides[slideIndex].img;slideText.textContent=slides[slideIndex].text;}
+slides.onclick=()=>{slideIndex++;slideIndex<slides.length?showSlide():(hideAll(),videoPage.classList.remove("hidden"));};
+function goToValentine(){hideAll();valentinePage.classList.remove("hidden");}
+function goToFinal(){hideAll();finalPage.classList.remove("hidden");}
+function backFromTease(){hideAll();questions.classList.remove("hidden");}
+function hideAll(){document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));}
 
-function startSlides(){
-  hideAll();
-  slideIndex = 0;
-  document.getElementById("slides").classList.remove("hidden");
-  showSlide();
-}
-
-function showSlide(){
-  slideImg.src = slides[slideIndex].img;
-  slideText.textContent = slides[slideIndex].text;
-}
-
-document.getElementById("slides").onclick = ()=>{
-  slideIndex++;
-  if(slideIndex < slides.length){
-    showSlide();
-  }else{
-    hideAll();
-    document.getElementById("videoPage").classList.remove("hidden");
-  }
-};
-
-function goToValentine(){
-  hideAll();
-  document.getElementById("valentinePage").classList.remove("hidden");
-}
-
-function goToFinal(){
-  hideAll();
-  document.getElementById("finalPage").classList.remove("hidden");
-}
-
-function hideAll(){
-  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
-}
-
-/* ❤️ HEARTS + VIBRATION */
 function createHeart(){
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerHTML = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = (16 + Math.random() * 20) + "px";
-  heart.style.animationDuration = (4 + Math.random() * 4) + "s";
-  document.getElementById("heart-container").appendChild(heart);
-  setTimeout(()=>heart.remove(),8000);
+ const h=document.createElement("div");
+ h.className="heart";h.innerHTML="❤️";
+ h.style.left=Math.random()*100+"vw";
+ h.style.animationDuration=4+Math.random()*4+"s";
+ heart-container.appendChild(h);
+ setTimeout(()=>h.remove(),8000);
 }
 setInterval(createHeart,300);
 
 function clickEffect(x,y){
-  if(navigator.vibrate) navigator.vibrate(40);
-  for(let i=0;i<8;i++){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.innerHTML="❤️";
-    h.style.left=x+"px";
-    h.style.top=y+"px";
-    h.style.position="fixed";
-    h.style.animationDuration="2s";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),2000);
-  }
+ navigator.vibrate&&navigator.vibrate(40);
+ for(let i=0;i<8;i++){
+  const h=document.createElement("div");
+  h.className="heart";h.innerHTML="❤️";
+  h.style.left=x+"px";h.style.top=y+"px";h.style.position="fixed";
+  h.style.animationDuration="2s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),2000);
+ }
 }
 
-/* 🚀 START */
 loadQuestion();
 </script>
-
 </body>
 </html>
